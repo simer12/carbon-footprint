@@ -4,6 +4,8 @@ import React from 'react';
 import App from '../App';
 import Dashboard from '../components/Dashboard';
 import ActionPlan from '../components/ActionPlan';
+import Navbar from '../components/Navbar';
+import ChatInterface from '../components/ChatInterface';
 
 // Mock api to avoid hitting the actual network
 vi.mock('../services/api', () => ({
@@ -65,5 +67,55 @@ describe('Frontend Rendering and Analytics', () => {
 
     expect(handleToggle).toHaveBeenCalledTimes(1);
     expect(handleToggle).toHaveBeenCalledWith('act-1');
+  });
+
+  it('Navbar renders user email and streak count correctly, and supports logout triggers', () => {
+    const mockUser = { id: 'u-1', email: 'testuser@example.com', streak: 5 };
+    const handleLogout = vi.fn();
+    
+    render(
+      <Navbar 
+        activeTab="dashboard" 
+        setActiveTab={() => {}} 
+        backendStatus={{ status: 'online', demoMode: false }} 
+        user={mockUser} 
+        onLogout={handleLogout} 
+      />
+    );
+    
+    expect(screen.getByText('Hi, testuser')).toBeInTheDocument();
+    expect(screen.getByText('5d')).toBeInTheDocument();
+    expect(screen.getByText('AI ONLINE')).toBeInTheDocument();
+    
+    const logoutBtn = screen.getByTitle('Logout Session');
+    fireEvent.click(logoutBtn);
+    expect(handleLogout).toHaveBeenCalledTimes(1);
+  });
+
+  it('ChatInterface displays message history logs and submits message inputs', () => {
+    const chatHistory = [
+      { sender: 'coach', text: 'How is your tracking going?' },
+      { sender: 'user', text: 'I biked 5 miles.' }
+    ];
+    const handleSendMessage = vi.fn();
+    
+    render(
+      <ChatInterface 
+        chatHistory={chatHistory} 
+        onSendMessage={handleSendMessage} 
+        isLoading={false} 
+      />
+    );
+    
+    expect(screen.getByText('How is your tracking going?')).toBeInTheDocument();
+    expect(screen.getByText('I biked 5 miles.')).toBeInTheDocument();
+    
+    const input = screen.getByPlaceholderText(/Ask or log/);
+    fireEvent.change(input, { target: { value: 'I ate a vegan lunch' } });
+    
+    const sendBtn = screen.getByLabelText('Send message to AI carbon coach');
+    fireEvent.click(sendBtn);
+    
+    expect(handleSendMessage).toHaveBeenCalledWith('I ate a vegan lunch');
   });
 });

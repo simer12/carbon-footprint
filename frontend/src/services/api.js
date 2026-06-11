@@ -2,7 +2,12 @@
  * Stateful Carbon Footprint API Service Wrapper
  */
 
-const API_BASE = import.meta.env.VITE_API_BASE || '/api';
+let base = import.meta.env.VITE_API_BASE || '/api';
+base = base.replace(/\/+$/, '');
+if (base.startsWith('http') && !base.endsWith('/api') && !base.includes('/api/')) {
+  base += '/api';
+}
+const API_BASE = base;
 
 /**
  * JWT Token Management

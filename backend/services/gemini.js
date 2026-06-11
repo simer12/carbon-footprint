@@ -29,71 +29,142 @@ function simulateCarbonFootprintAnalysis(message, userProfile = {}) {
   const today = new Date().toISOString().split('T')[0];
   let matched = false;
 
-  if (text.includes('drive') || text.includes('car') || text.includes('mile')) {
+  if (text.includes('drive') || text.includes('car') || text.includes('mile') || text.includes('ride') || text.includes('bus') || text.includes('train') || text.includes('bike') || text.includes('walk') || text.includes('commute')) {
     matched = true;
-    let distance = 15; // default fallback
-    const distanceMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:mi|mile)/);
+    let distance = 15;
+    const distanceMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:mi|mile|kms?)/);
     if (distanceMatch) {
       distance = parseFloat(distanceMatch[1]);
     }
-    const calc = calculateEmissions('transport', { distance, mode: 'sedan' });
+    
+    let mode = 'sedan';
+    let isSUV = false;
+    if (text.includes('suv') || text.includes('truck')) {
+      mode = 'suv';
+      isSUV = true;
+    } else if (text.includes('electric') || text.includes('ev') || text.includes('tesla')) {
+      mode = 'ev';
+    } else if (text.includes('bus') || text.includes('train') || text.includes('metro') || text.includes('transit')) {
+      mode = 'public';
+    } else if (text.includes('bike') || text.includes('cycle') || text.includes('walk') || text.includes('foot')) {
+      mode = 'active';
+    }
+
+    const calc = calculateEmissions('transport', { distance, mode, isSUV });
     activities.push({
       category: 'transport',
       co2: calc.co2,
-      description: 'Commuted by car (Heuristic)',
+      description: calc.calculationDetail,
       date: today
     });
-    responseText += `Logged transport activity. ${calc.calculationDetail} Biking or public transit could save carbon.`;
-    actionPlan.push({
-      task: "Walk or cycle for trips under 2 miles this week",
-      category: "transport",
-      co2Reduction: 2.2,
-      difficulty: "easy"
-    });
-  } else if (text.includes('beef') || text.includes('steak') || text.includes('meat') || text.includes('eat')) {
+    responseText += `Logged transport activity. ${calc.calculationDetail} `;
+    
+    if (mode === 'active') {
+      actionPlan.push({
+        task: "Walk or bike for short trips under 2 miles",
+        category: "transport",
+        co2Reduction: 2.2,
+        difficulty: "easy"
+      });
+    } else {
+      actionPlan.push({
+        task: "Try using public transit or carpool for your commute tomorrow",
+        category: "transport",
+        co2Reduction: 3.5,
+        difficulty: "easy"
+      });
+    }
+  } else if (text.includes('beef') || text.includes('steak') || text.includes('meat') || text.includes('eat') || text.includes('chicken') || text.includes('pork') || text.includes('fish') || text.includes('meal') || text.includes('salad') || text.includes('vegan') || text.includes('vegetarian')) {
     matched = true;
-    const calc = calculateEmissions('diet', { foodType: 'beef', mealCount: 1 });
+    let foodType = 'vegetarian';
+    if (text.includes('beef') || text.includes('steak') || text.includes('burger')) {
+      foodType = 'beef';
+    } else if (text.includes('chicken') || text.includes('poultry') || text.includes('pork') || text.includes('fish') || text.includes('meat')) {
+      foodType = 'poultry';
+    } else if (text.includes('vegan') || text.includes('salad') || text.includes('plant')) {
+      foodType = 'vegan';
+    }
+    
+    const calc = calculateEmissions('diet', { foodType, mealCount: 1 });
     activities.push({
       category: 'diet',
       co2: calc.co2,
-      description: 'Had beef meal (Heuristic)',
+      description: calc.calculationDetail,
       date: today
     });
-    responseText += `Logged diet choice. ${calc.calculationDetail} Beef is high in emissions. Consider poultry or plant-based protein.`;
+    responseText += `Logged diet choice. ${calc.calculationDetail} `;
     actionPlan.push({
-      task: "Try a full plant-based lunch tomorrow",
+      task: foodType === 'vegan' ? "Try a full plant-based diet for all meals tomorrow" : "Try a full plant-based lunch tomorrow",
       category: "diet",
       co2Reduction: 4.5,
       difficulty: "easy"
     });
-  } else if (text.includes('ac') || text.includes('air conditioning') || text.includes('power') || text.includes('electricity')) {
+  } else if (text.includes('ac') || text.includes('air conditioning') || text.includes('power') || text.includes('electricity') || text.includes('heater') || text.includes('solar')) {
     matched = true;
-    const calc = calculateEmissions('energy', { energyType: 'ac', amount: 3 });
+    let energyType = 'electricity';
+    let amount = 3; // default hours/kwh
+    
+    const amountMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:hour|hr|kwh)/);
+    if (amountMatch) {
+      amount = parseFloat(amountMatch[1]);
+    }
+    
+    if (text.includes('ac') || text.includes('air conditioning') || text.includes('cooling')) {
+      energyType = 'ac';
+    } else if (text.includes('heater') || text.includes('heating')) {
+      energyType = 'heater';
+    } else if (text.includes('solar') || text.includes('panel')) {
+      energyType = 'solar';
+    }
+    
+    const calc = calculateEmissions('energy', { energyType, amount });
     activities.push({
       category: 'energy',
       co2: calc.co2,
-      description: 'Used air conditioning (Heuristic)',
+      description: calc.calculationDetail,
       date: today
     });
-    responseText += `Logged energy usage. ${calc.calculationDetail} Cooling consumes high energy. Try eco-mode temperatures.`;
-    actionPlan.push({
-      task: "Adjust AC thermostat by 2 degrees to save energy",
-      category: "energy",
-      co2Reduction: 1.5,
-      difficulty: "easy"
-    });
-  } else if (text.includes('recycle') || text.includes('compost') || text.includes('plastic')) {
+    responseText += `Logged energy activity. ${calc.calculationDetail} `;
+    
+    if (energyType === 'ac' || energyType === 'heater') {
+      actionPlan.push({
+        task: "Adjust AC or heater thermostat by 2 degrees to save energy",
+        category: "energy",
+        co2Reduction: 1.5,
+        difficulty: "easy"
+      });
+    } else {
+      actionPlan.push({
+        task: "Unplug chargers and power strips when not in use to avoid vampire load",
+        category: "energy",
+        co2Reduction: 0.8,
+        difficulty: "easy"
+      });
+    }
+  } else if (text.includes('recycle') || text.includes('compost') || text.includes('plastic') || text.includes('waste') || text.includes('garbage') || text.includes('landfill')) {
     matched = true;
-    const calc = calculateEmissions('waste', { wasteAction: 'recycle', bags: 1 });
+    let wasteAction = 'landfill';
+    let bags = 1;
+    
+    const bagsMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:bag|bin)/);
+    if (bagsMatch) {
+      bags = parseFloat(bagsMatch[1]);
+    }
+    
+    if (text.includes('recycle') || text.includes('compost') || text.includes('reuse')) {
+      wasteAction = 'recycle';
+    }
+    
+    const calc = calculateEmissions('waste', { wasteAction, bags });
     activities.push({
       category: 'waste',
       co2: calc.co2,
-      description: 'Recycled plastics/cans (Heuristic)',
+      description: calc.calculationDetail,
       date: today
     });
-    responseText += `Logged waste management. ${calc.calculationDetail} Keep up the great recycling work!`;
+    responseText += `Logged waste choice. ${calc.calculationDetail} `;
     actionPlan.push({
-      task: "Eliminate plastic bottles by using a reusable mug",
+      task: wasteAction === 'recycle' ? "Eliminate plastic bottles by using a reusable mug" : "Recycle paper, plastic, and cardboard boxes to offset landfill waste",
       category: "waste",
       co2Reduction: 0.8,
       difficulty: "easy"
@@ -229,7 +300,11 @@ export async function analyzeHabit(userMessage, chatHistory = [], userProfile = 
     const fullPrompt = `${systemPrompt}\n\nChat Context:\n${chatContext}\n\nUser Message: ${userMessage}\n\nAnalyze the message and output the requested JSON object.`;
 
     const result = await generateContentWithModelFallback(genAI, fullPrompt);
-    const responseData = JSON.parse(result.response.text());
+    let responseText = result.response.text();
+    if (responseText.includes('```')) {
+      responseText = responseText.replace(/```json|```/g, '').trim();
+    }
+    const responseData = JSON.parse(responseText);
 
     // Post-Process: Calculate deterministic carbon offset using our local calculator
     let processedActivities = [];

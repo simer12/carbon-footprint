@@ -49,7 +49,7 @@ function saveDb() {
   isWriting = true;
   const tempFile = DB_FILE + '.tmp';
 
-  fs.writeFile(tempFile, JSON.stringify(db, null, 2), 'utf8', (err) => {
+  fs.writeFile(tempFile, JSON.stringify(db), 'utf8', (err) => {
     if (err) {
       isWriting = false;
       console.error('Error writing temp database file:', err);
@@ -92,7 +92,7 @@ export async function registerUser(email, password) {
   const salt = await bcrypt.genSalt(10);
   const passwordHash = await bcrypt.hash(password, salt);
 
-  const userId = `user-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+  const userId = `user-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
   const newUser = {
     id: userId,
     email: normalizedEmail,
@@ -183,7 +183,7 @@ export function addLog(userId, activity) {
   updateUserStreak(userId);
 
   const newLog = {
-    id: `log-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+    id: `log-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
     userId,
     category: activity.category || 'other',
     co2: activity.co2 || 0,
@@ -231,7 +231,7 @@ export function saveUserActionPlan(userId, actionsList) {
   actionsList.forEach(newAct => {
     if (!existingTasks.includes(newAct.task.toLowerCase())) {
       existingActions.push({
-        id: `act-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+        id: `act-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
         task: newAct.task,
         category: newAct.category || 'other',
         co2Reduction: newAct.co2Reduction || 0.5,

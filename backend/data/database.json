@@ -1,53 +1,5 @@
 {
-  "users": [
-    {
-      "id": "user-1781151780027-1rgec",
-      "email": "test-1781151779428@example.com",
-      "passwordHash": "$2a$10$cuh7iBN/pAaNUjLDtL1ZSe9dSdNE9UyJNAZojt0c6rBbhgTqN8qV.",
-      "createdAt": "2026-06-11T04:23:00.028Z",
-      "streak": 1,
-      "lastActiveDate": "2026-06-11"
-    }
-  ],
-  "logs": [
-    {
-      "id": "log-1781151780973-4847h",
-      "userId": "user-1781151780027-1rgec",
-      "category": "energy",
-      "co2": -0.8,
-      "description": "Completed: Unplug chargers and power strips when not in use to avoid vampire load",
-      "date": "2026-06-11"
-    }
-  ],
-  "actionPlans": [
-    {
-      "userId": "user-1781151780027-1rgec",
-      "actions": [
-        {
-          "id": "seed-1-user-1781151780027-1rgec",
-          "task": "Unplug chargers and power strips when not in use to avoid vampire load",
-          "category": "energy",
-          "co2Reduction": 0.8,
-          "difficulty": "easy",
-          "completed": true
-        },
-        {
-          "id": "seed-2-user-1781151780027-1rgec",
-          "task": "Walk or bike for short trips under 2 miles",
-          "category": "transport",
-          "co2Reduction": 2.2,
-          "difficulty": "easy",
-          "completed": false
-        },
-        {
-          "id": "act-1781151780854-i23w7",
-          "task": "Walk or cycle for trips under 2 miles this week",
-          "category": "transport",
-          "co2Reduction": 2.2,
-          "difficulty": "easy",
-          "completed": false
-        }
-      ]
-    }
-  ]
+  "users": [],
+  "logs": [],
+  "actionPlans": []
 }

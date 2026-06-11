@@ -452,24 +452,34 @@ export default function App() {
           gridColumn: activeTab === 'all' ? '1' : undefined
         }}>
           {(activeTab === 'all' || activeTab === 'dashboard') && (
-            <Dashboard 
-              activities={activities} 
-              onDeleteActivity={handleDeleteActivity} 
-            />
+            <div id="dashboard-tabpanel" role="tabpanel" aria-labelledby="nav-tab-dashboard">
+              <Dashboard 
+                activities={activities} 
+                onDeleteActivity={handleDeleteActivity} 
+              />
+            </div>
           )}
 
           {(activeTab === 'all' || activeTab === 'actionPlan') && (
-            <ActionPlan 
-              actionPlan={actionPlan} 
-              onToggleAction={handleToggleAction} 
-            />
+            <div id="actionplan-tabpanel" role="tabpanel" aria-labelledby="nav-tab-actionplan">
+              <ActionPlan 
+                actionPlan={actionPlan} 
+                onToggleAction={handleToggleAction} 
+              />
+            </div>
           )}
         </div>
 
         {/* Right Section (Conversational Chatbot) */}
-        <div className="right-section" style={{
-          display: activeTab === 'all' || activeTab === 'chat' ? 'block' : 'none'
-        }}>
+        <div 
+          className="right-section" 
+          id="chat-tabpanel" 
+          role="tabpanel" 
+          aria-labelledby="nav-tab-chat" 
+          style={{
+            display: activeTab === 'all' || activeTab === 'chat' ? 'block' : 'none'
+          }}
+        >
           <ChatInterface 
             chatHistory={chatHistory} 
             onSendMessage={handleSendMessage} 

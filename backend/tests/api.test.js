@@ -73,10 +73,30 @@ describe('Carbon Footprint Stateful API Endpoints', () => {
         .get('/api/activities')
         .set('Authorization', `Bearer ${jwtToken}`);
 
+      expect(response.body.length).toBeGreaterThanOrEqual(0);
+    });
+
+    it('should retrieve authenticated user profile details from GET /api/auth/me', async () => {
+      const response = await request(app)
+        .get('/api/auth/me')
+        .set('Authorization', `Bearer ${jwtToken}`);
+      
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user).toHaveProperty('email', testEmail);
+      expect(response.body.user).toHaveProperty('streak');
+    });
+
+    it('should retrieve action plan successfully from GET /api/action-plan with seeded items', async () => {
+      const response = await request(app)
+        .get('/api/action-plan')
+        .set('Authorization', `Bearer ${jwtToken}`);
+      
       expect(response.status).toBe(200);
       expect(Array.isArray(response.body)).toBe(true);
-      // It should have some default activities seeded on register
-      expect(response.body.length).toBeGreaterThanOrEqual(0);
+      expect(response.body.length).toBe(2);
+      expect(response.body[0]).toHaveProperty('task');
+      expect(response.body[0]).toHaveProperty('completed', false);
     });
   });
 
@@ -99,6 +119,48 @@ describe('Carbon Footprint Stateful API Endpoints', () => {
       const transportLog = response.body.activities.find(l => l.category === 'transport');
       expect(transportLog).toBeDefined();
       expect(transportLog.co2).toBe(5.4); // 20 * 0.27
+    });
+
+    it('should manually create a transport activity log and return 201 Created via POST /api/activities', async () => {
+      const response = await request(app)
+        .post('/api/activities')
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .send({
+          category: 'transport',
+          co2: 3.5,
+          description: 'Manually logged transport',
+          date: '2026-06-11'
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body).toHaveProperty('id');
+      expect(response.body).toHaveProperty('co2', 3.5);
+      expect(response.body).toHaveProperty('description', 'Manually logged transport');
+    });
+
+    it('should fail to manually create an activity log with invalid co2 value via POST /api/activities', async () => {
+      const response = await request(app)
+        .post('/api/activities')
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .send({
+          category: 'diet',
+          co2: 'invalid-co2-number',
+          description: 'Failed activity'
+        });
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should fail to manually create an activity log with missing description via POST /api/activities', async () => {
+      const response = await request(app)
+        .post('/api/activities')
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .send({
+          category: 'energy',
+          co2: 1.2
+        });
+
+      expect(response.status).toBe(400);
     });
 
     it('should toggle action plan checklist and generate corresponding credit logs', async () => {

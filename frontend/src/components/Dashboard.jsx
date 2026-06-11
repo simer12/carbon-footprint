@@ -285,6 +285,7 @@ export default function Dashboard({ activities, onDeleteActivity }) {
               fontSize: '0.875rem',
               textAlign: 'left'
             }}>
+              <caption className="sr-only">List of logged carbon footprint activities and their carbon impact</caption>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}>
                   <th style={{ padding: '0.75rem 0.5rem', fontWeight: '500' }}>Date</th>

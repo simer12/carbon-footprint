@@ -32,11 +32,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// Security: If in production, require/generate a dynamic cryptographically secure key 
-// to prevent signature forge vulnerabilities due to hardcoded fallback defaults.
-const JWT_SECRET = process.env.JWT_SECRET || (process.env.NODE_ENV === 'production'
-  ? crypto.randomBytes(32).toString('hex')
-  : 'hackathon-eco-secret-key-2026');
+// Security: Generate a dynamic cryptographically secure key to prevent signature forge 
+// vulnerabilities due to hardcoded fallback defaults.
+const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
 
 // Simple custom in-memory rate limiter to prevent API spam and brute-force auth requests
 const ipCache = new Map();
@@ -67,6 +65,19 @@ function apiRateLimiter(req, res, next) {
     });
   }
   next();
+}
+
+// Periodically clean up expired rate limit entries to prevent memory leak DoS
+const cleanupInterval = setInterval(() => {
+  const now = Date.now();
+  for (const [ip, record] of ipCache.entries()) {
+    if (now > record.resetTime) {
+      ipCache.delete(ip);
+    }
+  }
+}, 15 * 60 * 1000);
+if (typeof cleanupInterval.unref === 'function') {
+  cleanupInterval.unref(); // Prevent keeping the active process open during test runner lifecycle
 }
 
 // Middleware configuration
@@ -133,10 +144,12 @@ app.get('/api/status', (req, res) => {
 app.post('/api/auth/register', apiRateLimiter, async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password || password.length < 6) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email || email.length > 100 || !emailRegex.test(email) || !password || password.length < 6 || password.length > 100) {
       return res.status(400).json({ 
         error: 'Bad Request', 
-        message: 'A valid email and password (minimum 6 characters) are required.' 
+        message: 'A valid email (max 100 chars) and password (minimum 6 chars, max 100) are required.' 
       });
     }
 
@@ -205,12 +218,26 @@ app.get('/api/activities', authenticateToken, (req, res, next) => {
  */
 app.post('/api/activities', authenticateToken, (req, res, next) => {
   try {
-    const { category, co2, description, date } = req.body;
+    let { category, co2, description, date } = req.body;
     if (!description || typeof co2 !== 'number') {
       return res.status(400).json({ error: 'Bad Request', message: 'Activity description and co2 values are required.' });
     }
 
-    const log = addLog(req.user.id, { category, co2, description, date });
+    const cleanDesc = String(description).trim().substring(0, 200);
+    const cleanCo2 = parseFloat(co2);
+    if (isNaN(cleanCo2) || cleanCo2 < -10000 || cleanCo2 > 10000) {
+      return res.status(400).json({ error: 'Bad Request', message: 'CO2 impact value must be a valid number between -10000 and 10000.' });
+    }
+
+    const validCategories = ['transport', 'diet', 'energy', 'waste', 'other'];
+    const cleanCat = validCategories.includes(category) ? category : 'other';
+
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (date && !dateRegex.test(date)) {
+      return res.status(400).json({ error: 'Bad Request', message: 'Date must be in YYYY-MM-DD format.' });
+    }
+
+    const log = addLog(req.user.id, { category: cleanCat, co2: cleanCo2, description: cleanDesc, date });
     res.status(201).json(log);
   } catch (error) {
     next(error);
@@ -269,17 +296,19 @@ app.post('/api/chat', authenticateToken, async (req, res, next) => {
   try {
     const { message, chatHistory } = req.body;
     
-    if (!message || typeof message !== 'string') {
+    if (!message || typeof message !== 'string' || message.trim().length === 0) {
       return res.status(400).json({ 
         error: 'Bad Request', 
         message: 'A non-empty string "message" property is required in the request body.' 
       });
     }
 
+    const cleanMessage = message.trim().substring(0, 1000);
+    const cleanHistory = Array.isArray(chatHistory) ? chatHistory.slice(-10) : [];
     const currentLogs = getUserLogs(req.user.id);
     
     // Call Gemini API passing conversational memory and user stats context
-    const aiResult = await analyzeHabit(message, chatHistory || [], req.user, currentLogs);
+    const aiResult = await analyzeHabit(cleanMessage, cleanHistory, req.user, currentLogs);
 
     // Save newly parsed activity (if any) to local database
     let parsedLog = null;
