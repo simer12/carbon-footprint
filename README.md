@@ -4,6 +4,8 @@
 
 Built specifically for **[Challenge 3] Carbon Footprint Awareness Platform**.
 
+🔗 **Live Deployed App**: [https://carbon-footprint-eosin.vercel.app/](https://carbon-footprint-eosin.vercel.app/)
+
 ---
 
 ## 📖 Chosen Persona & Vertical
