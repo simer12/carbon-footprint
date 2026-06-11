@@ -47,15 +47,30 @@ function saveDb() {
   }
 
   isWriting = true;
-  fs.writeFile(DB_FILE, JSON.stringify(db, null, 2), 'utf8', (err) => {
-    isWriting = false;
+  const tempFile = DB_FILE + '.tmp';
+
+  fs.writeFile(tempFile, JSON.stringify(db, null, 2), 'utf8', (err) => {
     if (err) {
-      console.error('Error saving database:', err);
+      isWriting = false;
+      console.error('Error writing temp database file:', err);
+      if (pendingWrite) {
+        pendingWrite = false;
+        saveDb();
+      }
+      return;
     }
-    if (pendingWrite) {
-      pendingWrite = false;
-      saveDb(); // Run pending write
-    }
+
+    // Atomic rename to replace the actual database file securely
+    fs.rename(tempFile, DB_FILE, (renameErr) => {
+      isWriting = false;
+      if (renameErr) {
+        console.error('Error renaming database file:', renameErr);
+      }
+      if (pendingWrite) {
+        pendingWrite = false;
+        saveDb(); // Process next pending write
+      }
+    });
   });
 }
 

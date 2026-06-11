@@ -1,214 +1,30 @@
 {
   "users": [
     {
-      "id": "user-1780982111099-ethke",
-      "email": "test-1780982110395@example.com",
-      "passwordHash": "$2a$10$j/jzpgFlaB/hDn0ML46BzuNhGoTsRnE//YZyeqrycQS991OC9tcNq",
-      "createdAt": "2026-06-09T05:15:11.099Z",
+      "id": "user-1781151780027-1rgec",
+      "email": "test-1781151779428@example.com",
+      "passwordHash": "$2a$10$cuh7iBN/pAaNUjLDtL1ZSe9dSdNE9UyJNAZojt0c6rBbhgTqN8qV.",
+      "createdAt": "2026-06-11T04:23:00.028Z",
       "streak": 1,
-      "lastActiveDate": "2026-06-09"
-    },
-    {
-      "id": "user-1780982952671-s0iio",
-      "email": "harsimerramgharia@gmail.com",
-      "passwordHash": "$2a$10$gnPPNEp7Xm4HVeIlTi/DeuM0JM4NBfNcKzBIhKSd2MZyTF4P44CJ2",
-      "createdAt": "2026-06-09T05:29:12.672Z",
-      "streak": 1,
-      "lastActiveDate": "2026-06-09"
-    },
-    {
-      "id": "user-1780983718004-hside",
-      "email": "harsimerramgharia2@gmail.com",
-      "passwordHash": "$2a$10$6J4hOho9prSERMrQPTVXbOQljKn4zE5YWznVP0MTtR679dJOXvKPe",
-      "createdAt": "2026-06-09T05:41:58.004Z",
-      "streak": 1,
-      "lastActiveDate": "2026-06-09"
-    },
-    {
-      "id": "user-1780984208911-ddbht",
-      "email": "test-1780984208219@example.com",
-      "passwordHash": "$2a$10$u35KvAruqe.4y7R6..DevuoHaPo3zcXA1todmio40JBBuI5Yxw7Tm",
-      "createdAt": "2026-06-09T05:50:08.918Z",
-      "streak": 1,
-      "lastActiveDate": "2026-06-09"
-    },
-    {
-      "id": "user-1780984239262-76xn6",
-      "email": "test-1780984238560@example.com",
-      "passwordHash": "$2a$10$/B02RUZZT9/8MV4SQUFE0uYs8X.8YPuy8wfqCGnqhGtbRXFdKrWcS",
-      "createdAt": "2026-06-09T05:50:39.262Z",
-      "streak": 1,
-      "lastActiveDate": "2026-06-09"
-    },
-    {
-      "id": "user-1780984938540-bfo0w",
-      "email": "test-1780984938117@example.com",
-      "passwordHash": "$2a$10$YIit0tcib6kbxFz5h24VruB8hY/gk4fTXJIWgmAcMlfgU8MVO3fKK",
-      "createdAt": "2026-06-09T06:02:18.540Z",
-      "streak": 1,
-      "lastActiveDate": "2026-06-09"
+      "lastActiveDate": "2026-06-11"
     }
   ],
   "logs": [
     {
-      "id": "log-1780982112051-p177m",
-      "userId": "user-1780982111099-ethke",
-      "category": "transport",
-      "co2": 4.05,
-      "description": "Commuted by car (Heuristic)",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780982112236-fw60m",
-      "userId": "user-1780982111099-ethke",
+      "id": "log-1781151780973-4847h",
+      "userId": "user-1781151780027-1rgec",
       "category": "energy",
       "co2": -0.8,
       "description": "Completed: Unplug chargers and power strips when not in use to avoid vampire load",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780982977591-9ff45",
-      "userId": "user-1780982952671-s0iio",
-      "category": "energy",
-      "co2": -0.8,
-      "description": "Completed: Unplug chargers and power strips when not in use to avoid vampire load",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780982978821-b2gha",
-      "userId": "user-1780982952671-s0iio",
-      "category": "transport",
-      "co2": -2.2,
-      "description": "Completed: Walk or bike for short trips under 2 miles",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780983248124-mvqzq",
-      "userId": "user-1780982952671-s0iio",
-      "category": "transport",
-      "co2": 4.05,
-      "description": "Traveled 15.0 miles via sedan emitting 4.1 kg CO₂.",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780983418272-e4s7i",
-      "userId": "user-1780982952671-s0iio",
-      "category": "transport",
-      "co2": -1.2,
-      "description": "Completed: Explore public transport options for one of your regular commutes next week.",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780983419113-cxtgg",
-      "userId": "user-1780982952671-s0iio",
-      "category": "transport",
-      "co2": -0.8,
-      "description": "Completed: Combine errands into fewer trips to reduce overall driving distance.",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780983419914-xbcwp",
-      "userId": "user-1780982952671-s0iio",
-      "category": "diet",
-      "co2": -1,
-      "description": "Completed: Log all your meals tomorrow for a complete diet report",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780983436743-ux2si",
-      "userId": "user-1780982952671-s0iio",
-      "category": "diet",
-      "co2": 7.5,
-      "description": "Had beef meal (Heuristic)",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780983482455-7rqhz",
-      "userId": "user-1780982952671-s0iio",
-      "category": "diet",
-      "co2": -4.5,
-      "description": "Completed: Try a full plant-based lunch tomorrow",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780983500268-5wmgh",
-      "userId": "user-1780982952671-s0iio",
-      "category": "diet",
-      "co2": 0.5,
-      "description": "Logged 1 vegan meal(s), contributing 0.5 kg CO₂.",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780983506826-01juk",
-      "userId": "user-1780982952671-s0iio",
-      "category": "diet",
-      "co2": -1.8,
-      "description": "Completed: Explore a new plant-based recipe this week to add more delicious, low-carbon meals to your routine.",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780983724994-4bnfz",
-      "userId": "user-1780983718004-hside",
-      "category": "energy",
-      "co2": -0.8,
-      "description": "Completed: Unplug chargers and power strips when not in use to avoid vampire load",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780984212138-2eqxd",
-      "userId": "user-1780984208911-ddbht",
-      "category": "transport",
-      "co2": 5.4,
-      "description": "Commuted by car (Heuristic)",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780984212287-eg7f7",
-      "userId": "user-1780984208911-ddbht",
-      "category": "energy",
-      "co2": -0.8,
-      "description": "Completed: Unplug chargers and power strips when not in use to avoid vampire load",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780984244434-t8nu3",
-      "userId": "user-1780984239262-76xn6",
-      "category": "transport",
-      "co2": 5.4,
-      "description": "Traveled 20.0 miles via sedan emitting 5.4 kg CO₂.",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780984244484-dxl6k",
-      "userId": "user-1780984239262-76xn6",
-      "category": "energy",
-      "co2": -0.8,
-      "description": "Completed: Unplug chargers and power strips when not in use to avoid vampire load",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780984941984-5480l",
-      "userId": "user-1780984938540-bfo0w",
-      "category": "transport",
-      "co2": 5.4,
-      "description": "Commuted by car (Heuristic)",
-      "date": "2026-06-09"
-    },
-    {
-      "id": "log-1780984942054-s9v56",
-      "userId": "user-1780984938540-bfo0w",
-      "category": "energy",
-      "co2": -0.8,
-      "description": "Completed: Unplug chargers and power strips when not in use to avoid vampire load",
-      "date": "2026-06-09"
+      "date": "2026-06-11"
     }
   ],
   "actionPlans": [
     {
-      "userId": "user-1780982111099-ethke",
+      "userId": "user-1781151780027-1rgec",
       "actions": [
         {
-          "id": "seed-1-user-1780982111099-ethke",
+          "id": "seed-1-user-1781151780027-1rgec",
           "task": "Unplug chargers and power strips when not in use to avoid vampire load",
           "category": "energy",
           "co2Reduction": 0.8,
@@ -216,7 +32,7 @@
           "completed": true
         },
         {
-          "id": "seed-2-user-1780982111099-ethke",
+          "id": "seed-2-user-1781151780027-1rgec",
           "task": "Walk or bike for short trips under 2 miles",
           "category": "transport",
           "co2Reduction": 2.2,
@@ -224,184 +40,7 @@
           "completed": false
         },
         {
-          "id": "act-1780982112053-i1044",
-          "task": "Walk or cycle for trips under 2 miles this week",
-          "category": "transport",
-          "co2Reduction": 2.2,
-          "difficulty": "easy",
-          "completed": false
-        }
-      ]
-    },
-    {
-      "userId": "user-1780982952671-s0iio",
-      "actions": [
-        {
-          "id": "seed-1-user-1780982952671-s0iio",
-          "task": "Unplug chargers and power strips when not in use to avoid vampire load",
-          "category": "energy",
-          "co2Reduction": 0.8,
-          "difficulty": "easy",
-          "completed": true
-        },
-        {
-          "id": "seed-2-user-1780982952671-s0iio",
-          "task": "Walk or bike for short trips under 2 miles",
-          "category": "transport",
-          "co2Reduction": 2.2,
-          "difficulty": "easy",
-          "completed": true
-        },
-        {
-          "id": "act-1780983002526-xiurv",
-          "task": "Log all your meals tomorrow for a complete diet report",
-          "category": "diet",
-          "co2Reduction": 1,
-          "difficulty": "easy",
-          "completed": true
-        },
-        {
-          "id": "act-1780983248126-kv1wv",
-          "task": "Combine errands into fewer trips to reduce overall driving distance.",
-          "category": "transport",
-          "co2Reduction": 0.8,
-          "difficulty": "easy",
-          "completed": true
-        },
-        {
-          "id": "act-1780983248126-zj71s",
-          "task": "Explore public transport options for one of your regular commutes next week.",
-          "category": "transport",
-          "co2Reduction": 1.2,
-          "difficulty": "medium",
-          "completed": true
-        },
-        {
-          "id": "act-1780983436743-mdvki",
-          "task": "Try a full plant-based lunch tomorrow",
-          "category": "diet",
-          "co2Reduction": 4.5,
-          "difficulty": "easy",
-          "completed": true
-        },
-        {
-          "id": "act-1780983500269-o9jk0",
-          "task": "Explore a new plant-based recipe this week to add more delicious, low-carbon meals to your routine.",
-          "category": "diet",
-          "co2Reduction": 1.8,
-          "difficulty": "easy",
-          "completed": true
-        }
-      ]
-    },
-    {
-      "userId": "user-1780983718004-hside",
-      "actions": [
-        {
-          "id": "seed-1-user-1780983718004-hside",
-          "task": "Unplug chargers and power strips when not in use to avoid vampire load",
-          "category": "energy",
-          "co2Reduction": 0.8,
-          "difficulty": "easy",
-          "completed": true
-        },
-        {
-          "id": "seed-2-user-1780983718004-hside",
-          "task": "Walk or bike for short trips under 2 miles",
-          "category": "transport",
-          "co2Reduction": 2.2,
-          "difficulty": "easy",
-          "completed": false
-        }
-      ]
-    },
-    {
-      "userId": "user-1780984208911-ddbht",
-      "actions": [
-        {
-          "id": "seed-1-user-1780984208911-ddbht",
-          "task": "Unplug chargers and power strips when not in use to avoid vampire load",
-          "category": "energy",
-          "co2Reduction": 0.8,
-          "difficulty": "easy",
-          "completed": true
-        },
-        {
-          "id": "seed-2-user-1780984208911-ddbht",
-          "task": "Walk or bike for short trips under 2 miles",
-          "category": "transport",
-          "co2Reduction": 2.2,
-          "difficulty": "easy",
-          "completed": false
-        },
-        {
-          "id": "act-1780984212142-k22gz",
-          "task": "Walk or cycle for trips under 2 miles this week",
-          "category": "transport",
-          "co2Reduction": 2.2,
-          "difficulty": "easy",
-          "completed": false
-        }
-      ]
-    },
-    {
-      "userId": "user-1780984239262-76xn6",
-      "actions": [
-        {
-          "id": "seed-1-user-1780984239262-76xn6",
-          "task": "Unplug chargers and power strips when not in use to avoid vampire load",
-          "category": "energy",
-          "co2Reduction": 0.8,
-          "difficulty": "easy",
-          "completed": true
-        },
-        {
-          "id": "seed-2-user-1780984239262-76xn6",
-          "task": "Walk or bike for short trips under 2 miles",
-          "category": "transport",
-          "co2Reduction": 2.2,
-          "difficulty": "easy",
-          "completed": false
-        },
-        {
-          "id": "act-1780984244435-4wca4",
-          "task": "For your next short trip, consider walking or cycling instead of driving. Even a few miles can make a difference!",
-          "category": "transport",
-          "co2Reduction": 2.5,
-          "difficulty": "easy",
-          "completed": false
-        },
-        {
-          "id": "act-1780984244435-ozh5n",
-          "task": "Explore public transport options for your regular commutes. This can significantly reduce your solo driving miles.",
-          "category": "transport",
-          "co2Reduction": 5,
-          "difficulty": "medium",
-          "completed": false
-        }
-      ]
-    },
-    {
-      "userId": "user-1780984938540-bfo0w",
-      "actions": [
-        {
-          "id": "seed-1-user-1780984938540-bfo0w",
-          "task": "Unplug chargers and power strips when not in use to avoid vampire load",
-          "category": "energy",
-          "co2Reduction": 0.8,
-          "difficulty": "easy",
-          "completed": true
-        },
-        {
-          "id": "seed-2-user-1780984938540-bfo0w",
-          "task": "Walk or bike for short trips under 2 miles",
-          "category": "transport",
-          "co2Reduction": 2.2,
-          "difficulty": "easy",
-          "completed": false
-        },
-        {
-          "id": "act-1780984941986-98zwa",
+          "id": "act-1781151780854-i23w7",
           "task": "Walk or cycle for trips under 2 miles this week",
           "category": "transport",
           "co2Reduction": 2.2,
