@@ -20,7 +20,17 @@ import { analyzeHabit } from './services/gemini.js';
 dotenv.config();
 
 const app = express();
+app.disable('x-powered-by'); // Disable tech-stack leak header
+
 const PORT = process.env.PORT || 5000;
+
+// Security: Configure manual HTTP headers for clickjacking, XSS, and MIME-type sniffing protection
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+});
 
 // Security: If in production, require/generate a dynamic cryptographically secure key 
 // to prevent signature forge vulnerabilities due to hardcoded fallback defaults.
@@ -170,49 +180,69 @@ app.post('/api/auth/login', apiRateLimiter, async (req, res, next) => {
 /**
  * Secured Route: Get User Profile/Session
  */
-app.get('/api/auth/me', authenticateToken, (req, res) => {
-  res.json({ user: req.user });
+app.get('/api/auth/me', authenticateToken, (req, res, next) => {
+  try {
+    res.json({ user: req.user });
+  } catch (error) {
+    next(error);
+  }
 });
 
 /**
  * Secured Route: Fetch Activities
  */
-app.get('/api/activities', authenticateToken, (req, res) => {
-  const logs = getUserLogs(req.user.id);
-  res.json(logs);
+app.get('/api/activities', authenticateToken, (req, res, next) => {
+  try {
+    const logs = getUserLogs(req.user.id);
+    res.json(logs);
+  } catch (error) {
+    next(error);
+  }
 });
 
 /**
  * Secured Route: Manual Activity Log Creation
  */
-app.post('/api/activities', authenticateToken, (req, res) => {
-  const { category, co2, description, date } = req.body;
-  if (!description || typeof co2 !== 'number') {
-    return res.status(400).json({ error: 'Bad Request', message: 'Activity description and co2 values are required.' });
-  }
+app.post('/api/activities', authenticateToken, (req, res, next) => {
+  try {
+    const { category, co2, description, date } = req.body;
+    if (!description || typeof co2 !== 'number') {
+      return res.status(400).json({ error: 'Bad Request', message: 'Activity description and co2 values are required.' });
+    }
 
-  const log = addLog(req.user.id, { category, co2, description, date });
-  res.status(201).json(log);
+    const log = addLog(req.user.id, { category, co2, description, date });
+    res.status(201).json(log);
+  } catch (error) {
+    next(error);
+  }
 });
 
 /**
  * Secured Route: Delete Log
  */
-app.delete('/api/activities/:id', authenticateToken, (req, res) => {
-  const deleted = deleteLog(req.user.id, req.params.id);
-  if (deleted) {
-    res.json({ message: 'Activity deleted successfully' });
-  } else {
-    res.status(404).json({ error: 'Not Found', message: 'Activity log not found or unauthorized' });
+app.delete('/api/activities/:id', authenticateToken, (req, res, next) => {
+  try {
+    const deleted = deleteLog(req.user.id, req.params.id);
+    if (deleted) {
+      res.json({ message: 'Activity deleted successfully' });
+    } else {
+      res.status(404).json({ error: 'Not Found', message: 'Activity log not found or unauthorized' });
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
 /**
  * Secured Route: Fetch Action Plan
  */
-app.get('/api/action-plan', authenticateToken, (req, res) => {
-  const actions = getUserActionPlan(req.user.id);
-  res.json(actions);
+app.get('/api/action-plan', authenticateToken, (req, res, next) => {
+  try {
+    const actions = getUserActionPlan(req.user.id);
+    res.json(actions);
+  } catch (error) {
+    next(error);
+  }
 });
 
 /**

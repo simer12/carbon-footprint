@@ -127,5 +127,42 @@ describe('Carbon Footprint Stateful API Endpoints', () => {
       expect(offsetLog).toBeDefined();
       expect(offsetLog.co2).toBe(-targetTask.co2Reduction); // Negative credit!
     });
+
+    it('should delete an activity log successfully', async () => {
+      // 1. Fetch current activities
+      const listResponse = await request(app)
+        .get('/api/activities')
+        .set('Authorization', `Bearer ${jwtToken}`);
+      
+      expect(listResponse.status).toBe(200);
+      const initialCount = listResponse.body.length;
+      expect(initialCount).toBeGreaterThan(0);
+      
+      const logToDelete = listResponse.body[0];
+      
+      // 2. Perform delete
+      const deleteResponse = await request(app)
+        .delete(`/api/activities/${logToDelete.id}`)
+        .set('Authorization', `Bearer ${jwtToken}`);
+        
+      expect(deleteResponse.status).toBe(200);
+      expect(deleteResponse.body).toHaveProperty('message', 'Activity deleted successfully');
+      
+      // 3. Verify it is removed from the activities list
+      const afterListResponse = await request(app)
+        .get('/api/activities')
+        .set('Authorization', `Bearer ${jwtToken}`);
+        
+      expect(afterListResponse.body.length).toBe(initialCount - 1);
+      expect(afterListResponse.body.find(l => l.id === logToDelete.id)).toBeUndefined();
+    });
+
+    it('should return 404 when trying to delete a non-existent activity log', async () => {
+      const deleteResponse = await request(app)
+        .delete('/api/activities/non-existent-log-id-123')
+        .set('Authorization', `Bearer ${jwtToken}`);
+        
+      expect(deleteResponse.status).toBe(404);
+    });
   });
 });

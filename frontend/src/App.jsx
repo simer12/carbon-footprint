@@ -420,6 +420,9 @@ export default function App() {
   // 6. Stateful Dashboard Render (Authenticated State)
   return (
     <div className="app-container">
+      {/* Keyboard Accessibility Skip Link */}
+      <a href="#main-content-focus" className="skip-link">Skip to main content</a>
+
       {/* Navbar */}
       <Navbar 
         activeTab={activeTab} 
@@ -439,7 +442,7 @@ export default function App() {
       )}
 
       {/* Workspace Grid */}
-      <main className="main-content">
+      <main id="main-content-focus" className="main-content" tabIndex="-1">
         
         {/* Left Section (Overview / Dashboard / Action Checklist) */}
         <div className="left-section" style={{
