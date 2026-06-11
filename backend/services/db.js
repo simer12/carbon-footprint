@@ -33,15 +33,30 @@ export function initDb() {
   }
 }
 
+let isWriting = false;
+let pendingWrite = false;
+
 /**
- * Writes the current database state to the local JSON file.
+ * Writes the current database state to the local JSON file asynchronously.
+ * Uses a non-blocking queue to prevent event loop delay and file write races.
  */
 function saveDb() {
-  try {
-    fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2), 'utf8');
-  } catch (error) {
-    console.error('Error saving database:', error);
+  if (isWriting) {
+    pendingWrite = true;
+    return;
   }
+
+  isWriting = true;
+  fs.writeFile(DB_FILE, JSON.stringify(db, null, 2), 'utf8', (err) => {
+    isWriting = false;
+    if (err) {
+      console.error('Error saving database:', err);
+    }
+    if (pendingWrite) {
+      pendingWrite = false;
+      saveDb(); // Run pending write
+    }
+  });
 }
 
 // Ensure database is initialized on import

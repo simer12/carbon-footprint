@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import { 
   registerUser, 
   loginUser, 
@@ -20,7 +21,43 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const JWT_SECRET = process.env.JWT_SECRET || 'hackathon-eco-secret-key-2026';
+
+// Security: If in production, require/generate a dynamic cryptographically secure key 
+// to prevent signature forge vulnerabilities due to hardcoded fallback defaults.
+const JWT_SECRET = process.env.JWT_SECRET || (process.env.NODE_ENV === 'production'
+  ? crypto.randomBytes(32).toString('hex')
+  : 'hackathon-eco-secret-key-2026');
+
+// Simple custom in-memory rate limiter to prevent API spam and brute-force auth requests
+const ipCache = new Map();
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const MAX_LIMIT_PER_IP = 100; // max 100 requests per IP per window
+
+function apiRateLimiter(req, res, next) {
+  const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  const now = Date.now();
+  
+  if (!ipCache.has(ip)) {
+    ipCache.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    return next();
+  }
+  
+  const record = ipCache.get(ip);
+  if (now > record.resetTime) {
+    record.count = 1;
+    record.resetTime = now + RATE_LIMIT_WINDOW_MS;
+    return next();
+  }
+  
+  record.count++;
+  if (record.count > MAX_LIMIT_PER_IP) {
+    return res.status(429).json({ 
+      error: 'Too Many Requests', 
+      message: 'Too many auth requests from this IP. Please try again after 15 minutes.' 
+    });
+  }
+  next();
+}
 
 // Middleware configuration
 app.use(cors({
@@ -83,7 +120,7 @@ app.get('/api/status', (req, res) => {
 /**
  * Auth Route: Register
  */
-app.post('/api/auth/register', async (req, res, next) => {
+app.post('/api/auth/register', apiRateLimiter, async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!email || !password || password.length < 6) {
@@ -108,7 +145,7 @@ app.post('/api/auth/register', async (req, res, next) => {
 /**
  * Auth Route: Login
  */
-app.post('/api/auth/login', async (req, res, next) => {
+app.post('/api/auth/login', apiRateLimiter, async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {

@@ -143,7 +143,7 @@ async function generateContentWithModelFallback(genAI, fullPrompt) {
       console.warn('⚠️ gemini-2.5-flash service unavailable. Retrying with stable gemini-1.5-flash...');
       try {
         const fallbackModel = genAI.getGenerativeModel({
-          model: 'gemini-1.5-flash-latest',
+          model: 'gemini-1.5-flash',
           generationConfig: { responseMimeType: 'application/json' }
         });
         return await fallbackModel.generateContent(fullPrompt);
@@ -162,7 +162,7 @@ async function generateContentWithModelFallback(genAI, fullPrompt) {
  * and calculate deterministic emissions.
  */
 export async function analyzeHabit(userMessage, chatHistory = [], userProfile = {}, recentLogs = []) {
-  if (isApiKeyMock || !genAI) {
+  if (isApiKeyMock || !genAI || process.env.NODE_ENV === 'test') {
     return simulateCarbonFootprintAnalysis(userMessage, userProfile);
   }
 
