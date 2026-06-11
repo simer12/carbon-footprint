@@ -2,7 +2,7 @@
  * Stateful Carbon Footprint API Service Wrapper
  */
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
 /**
  * JWT Token Management
