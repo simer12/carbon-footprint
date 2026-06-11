@@ -68,7 +68,7 @@ graph TD
 ```
 
 ### Key Workflow Steps:
-1. **User Auth**: Users register or log in. Passwords are encrypted with `bcryptjs` and session states are managed using **JSON Web Tokens (JWT)**.
+1. **User Auth**: Users register or log in. Passwords are encrypted with `bcryptjs` and session states are managed using **JSON Web Tokens (JWT)**. Registration and login endpoints are protected against spamming and brute-force brute attacks via custom IP rate limiters.
 2. **Habit Logging**: The user logs a habit in the AI Coach chat box (e.g. *"I drove 15 miles in my sedan"*).
 3. **Parameter Extraction**: The backend wrapper inputs the user text along with their profile summary into Gemini, returning structured parameters.
 4. **Calculations**: The parameters are translated into exact carbon weights locally.
@@ -83,6 +83,15 @@ The application has been audited and fully optimized to fit small viewports (dow
 *   **Zero-Scroll Log Table (`<480px`)**: Hides the Date column on mobile/tablet viewports and uses fixed column widths for badge tags, ensuring long activity logs wrap cleanly (`word-break: break-word`).
 *   **Flexbox Input Shrinking (`<480px`)**: Constrains inputs with `min-width: 0` to prevent long placeholders from stretching layout cards out of the screen.
 *   **Accessibility (A11y)**: Configured with custom visual outlines for keyboard focus navigation, proper semantic HTML structures (`<header>`, `<main>`, `<nav>`, `<footer>`), and ARIA elements (`role="checkbox"`, `aria-live="polite"`).
+*   **Keyboard Skip-Link**: Includes a keyboard-focusable "Skip to content" link that directs programmatic focus immediately to the `<main>` workspace (`id="main-content-focus"`), bypassing navigation headers for accessibility.
+*   **WCAG AAA Contrast**: Slate colors variable tokens are optimized for high contrast ratios on dark backgrounds (slate `#cbd5e1` and `#94a3b8` values).
+
+---
+
+## 🔒 Security Design & Robustness Upgrades
+*   **Express Security Headers**: Disabled the tech stack identifier header (`X-Powered-By`) and set custom middleware to write secure headers on every response protecting against MIME-sniffing, XSS injections, and Clickjacking (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `X-XSS-Protection: 1; mode=block`).
+*   **Spam & Brute-Force Rate Limiting**: Added in-memory IP rate-limiting middleware to `/api/auth/register` and `/api/auth/login` blocking brute-forcing scripts (limits requests to 100 per IP per 15 minutes).
+*   **Try-Catch Controller Boundaries**: Every single backend route is wrapped in a `try-catch` error boundary routing back to the Express unhandled error handler middleware to guarantee zero route-level server crashes.
 
 ---
 
